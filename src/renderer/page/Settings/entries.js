@@ -87,6 +87,7 @@ export const Entries = [
                 title: '托盘图标颜色',
                 prop: 'trayIconVariety',
                 options: [
+                    { label: '跟随系统', value: 'auto' },
                     { label: '亮色', value: 'light' },
                     { label: '暗色', value: 'dark' }
                 ],

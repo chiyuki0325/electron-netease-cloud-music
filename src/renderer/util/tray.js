@@ -9,7 +9,8 @@ import {
     RESTORE_PLAYLIST,
     RESTORE_UI_STATE,
     UPDATE_PLAYING_URL,
-    SET_USER_FAVOR_TRACKS
+    SET_USER_FAVOR_TRACKS,
+    SET_TRAY_ICON_COLOR
 } from '@/store/mutation-types';
 
 /**
@@ -64,6 +65,13 @@ function sendMute(state) {
 }
 
 /**
+ * @param {string} color type
+ */
+function sendIconColor(color) {
+    send('icon', color);
+}
+
+/**
  * Vuex mutation subscribe handler
  * @param {import('vuex').MutationPayload} mutation
  * @param {State} state
@@ -92,6 +100,9 @@ function subscribeHandler(mutation, state) {
         }
         case RESTORE_UI_STATE:
             sendMute(state);
+            break;
+        case SET_TRAY_ICON_COLOR:
+            sendIconColor(mutation.payload);
             break;
     }
 }

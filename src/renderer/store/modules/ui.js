@@ -27,7 +27,8 @@ const state = {
     collectTrackIds: [],
     radioMode: false,
     downloaded: false,
-    downloading: false
+    downloading: false,
+    trayIconColor: 'light'
 };
 
 /**
@@ -96,6 +97,9 @@ const mutations = {
     },
     [types.ACTIVATE_RADIO](state, /** @type {boolean} */ payload) {
         state.radioMode = payload;
+    },
+    [types.SET_TRAY_ICON_COLOR](state, /** @type {string} */ payload) {
+        state.trayIconColor = payload;
     }
 };
 

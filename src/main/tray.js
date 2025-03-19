@@ -85,7 +85,16 @@ export class AppTray {
         /** @type {import('electron').WebContents} */
         this.wc = null;
         const restore = doDesktopHacks();
-        this.tray = new Tray(requireIcon(`tray.${color}`));
+        if (color !== 'auto') {
+            this.color = color;
+            this.autoColor = false;
+        } else {
+            this.color = 'light';
+            this.autoColor = true;
+            // temporarily use light icon
+            // until received message from renderer
+        }
+        this.tray = new Tray(requireIcon(`tray.${this.color}`));
         restore();
         this.tray.on('click', () => this.raise() );
         this.tray.setToolTip('Electron NCM');
@@ -123,6 +132,12 @@ export class AppTray {
                     break;
                 case 'track':
                     this.track = args[0];
+                    break;
+                case 'icon':
+                    if (this.autoColor) {
+                        // update icon color
+                        this.tray.setImage(requireIcon(`tray.${args[0]}`));
+                    }
                     break;
             }
             this.updateMenu();

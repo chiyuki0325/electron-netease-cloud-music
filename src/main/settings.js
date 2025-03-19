@@ -19,7 +19,7 @@ export const defaultSettings = {
     windowBorder: process.platform !== 'darwin',
     windowZoom: null,
     showTrayIcon: false,
-    trayIconVariety: 'light',
+    trayIconVariety: 'auto',
     exitOnWindowClose: true,
     minimizeOnStartup: false,
     themePrimaryColor: '#7e57c2',

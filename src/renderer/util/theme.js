@@ -7,9 +7,10 @@ const overrides = {
 /**
  * add app specific theme variable, then set theme color
  * @param {any} theme theme option
- * @param {string} extendName theme name to extend
+ * @param {string} variety theme variety (dark or light)
+ * @param {Function} setTrayIcon method to set tray icon color
  */
-export function initTheme(theme, extendName) {
+export function initTheme(theme, variety, setTrayIcon) {
     MuseUI.theme.addCreateTheme((theme) => {
         return `body{
 --primary-color:${theme.primary};
@@ -21,15 +22,17 @@ export function initTheme(theme, extendName) {
 --background-color:${theme.background.default};
 }`;
     });
-    setTheme(theme, extendName);
+    setTheme(theme, variety, setTrayIcon);
 }
 
 /**
  * set MuseUI theme color
  * @param {any} theme theme option
- * @param {string} extendName theme name to extend
+ * @param {string} variety theme variety (dark or light)
+ * @param {Function} setTrayIcon method to set tray icon color
  */
-export function setTheme(theme, extendName) {
+export function setTheme(theme, variety, setTrayIcon) {
     const id = 'ncm';
-    MuseUI.theme.add(id, { ...overrides, ...theme }, extendName).use(id);
+    MuseUI.theme.add(id, { ...overrides, ...theme }, variety).use(id);
+    setTrayIcon(variety === 'dark' ? 'light' : 'dark');  // reversed
 }

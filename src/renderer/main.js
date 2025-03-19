@@ -8,7 +8,7 @@ import { RecycleScroller } from 'vue-virtual-scroller';
 
 import App from './App.vue';
 import store from './store/index';
-import { UPDATE_SETTINGS } from './store/mutation-types';
+import { SET_TRAY_ICON_COLOR, UPDATE_SETTINGS } from './store/mutation-types';
 import routes from './routes';
 import { encm, isLinux } from './util/globals';
 import { initTheme, setTheme } from './util/theme';
@@ -38,6 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
 try {
+    // initialize settings
     let settings;
     const previousSettings = settings = sessionStorage.getItem('settings');
     if (previousSettings) {
@@ -47,16 +48,26 @@ try {
         sessionStorage.setItem('settings', JSON.stringify(settings));
     }
     store.commit(UPDATE_SETTINGS, settings);
+} catch { sessionStorage.removeItem('settings'); }
+
+tray.injectStore(store);
+
+const setTrayIcon = (/** @type {string} */ color) => {
+    store.commit(SET_TRAY_ICON_COLOR, color);
+};
+
+try {
+    // load settings
+    const settings = store.state.settings;
+    // apply theme
     const themeVariety = settings.themeVariety === 'auto'
         ? (darkMediaQuery.matches ? 'dark' : 'light')
         : settings.themeVariety;
     initTheme({
         primary: settings.themePrimaryColor,
         secondary: settings.themeSecondaryColor
-    }, themeVariety);
+    }, themeVariety, setTrayIcon);
 } catch { sessionStorage.removeItem('settings'); }
-
-tray.injectStore(store);
 
 function restoreUserInfoOnline() {
     store.dispatch('restoreUserInfo').catch(e => {
@@ -115,7 +126,7 @@ darkMediaQuery.addEventListener('change', e => {
     setTheme({
         primary: store.state.settings.themePrimaryColor,
         secondary: store.state.settings.themeSecondaryColor
-    }, variety);
+    }, variety, setTrayIcon);
 });
 
 if (isLinux) {
